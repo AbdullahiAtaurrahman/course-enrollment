@@ -1,7 +1,9 @@
 # course_enrollment_p
+
 An aid designed to keep track of students who enroll in certain courses
 
 ## Features
+
 - **User Management**: Create and view users. Supports two roles: `student` and `admin`. Includes validation for names and emails.
 - **Course Management**: Admins can manage courses (Create, Update, Delete) with validation strictly on non-empty titles and unique course codes. Any user can view courses.
 - **Enrollment Management**: Students can freely enroll and deregister themselves from courses. Admins can view all enrollments or enforce deregistration.
@@ -9,12 +11,14 @@ An aid designed to keep track of students who enroll in certain courses
 ## Installation and Setup
 
 1. **Clone the repository:**
+
    ```bash
    git clone <repository-url>
    cd course_enrollment_p
    ```
 
 2. **Create and activate a virtual environment (recommended):**
+
    ```bash
    python -m venv venv
    # On Windows:
@@ -40,3 +44,30 @@ uvicorn app.main:app --reload
 - The server will be accessible at: `http://127.0.0.1:8000`
 - You can access the interactive API documentation (Swagger UI) at: `http://127.0.0.1:8000/docs`
 - The `--reload` flag is used for local development to automatically restart the server when code changes are detected.
+
+## Running Tests
+
+1. **Install pytest** (if not already installed):
+
+   ```bash
+   pip install pytest httpx
+   ```
+
+2. **Run all tests:**
+
+   ```bash
+   pytest test/
+   ```
+
+3. **Run a specific test file:**
+
+   ```bash
+   pytest test/test_users.py
+   pytest test/test_courses.py
+   pytest test/test_enrollments.py
+   ```
+
+4. **Run with verbose output:**
+   ```bash
+   pytest test/ -v
+   ```
