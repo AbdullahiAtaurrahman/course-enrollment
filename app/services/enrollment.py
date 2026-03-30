@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
-from core.db import users, courses, enrollments
-from schemas.enrollment import Enrollment
+from app.core.db import users, courses, enrollments
+from app.schemas.enrollment import Enrollment
 
 class EnrollmentService:
     @staticmethod

@@ -1,7 +1,6 @@
-import re
 from fastapi import HTTPException, status
-from core.db import users
-from schemas.user import UserCreate, UserBase, User
+from app.core.db import users
+from app.schemas.user import UserCreate, User
 
 class UserService:
     @staticmethod

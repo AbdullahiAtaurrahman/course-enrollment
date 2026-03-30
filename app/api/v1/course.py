@@ -1,5 +1,5 @@
 from fastapi import APIRouter, status, Depends, HTTPException
-from schemas.course import CourseCreate, CourseUpdate
+from app.schemas.course import CourseCreate, CourseUpdate
 from app.services.course import CourseService
 from app.api.dps import is_user_admin
 

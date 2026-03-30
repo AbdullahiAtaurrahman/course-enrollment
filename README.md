@@ -1,73 +1,55 @@
-# course_enrollment_p
+# course-enrollment
 
-An aid designed to keep track of students who enroll in certain courses
+A RESTful API for managing course enrollments, built with FastAPI.
 
 ## Features
 
-- **User Management**: Create and view users. Supports two roles: `student` and `admin`. Includes validation for names and emails.
-- **Course Management**: Admins can manage courses (Create, Update, Delete) with validation strictly on non-empty titles and unique course codes. Any user can view courses.
-- **Enrollment Management**: Students can freely enroll and deregister themselves from courses. Admins can view all enrollments or enforce deregistration.
+- **User Management**: Create and view users. Supports two roles: `student` and `admin`. Validates name (non-empty) and email (format).
+- **Course Management**: Admins can create, update, and delete courses. Any user can view courses. Validates non-empty titles and unique course codes.
+- **Enrollment Management**: Students can enroll and deregister from courses. Admins can view all enrollments, filter by course, and force-deregister students.
 
 ## Installation and Setup
 
 1. **Clone the repository:**
-
    ```bash
    git clone <repository-url>
-   cd course_enrollment_p
+   cd course-enrollment
    ```
 
 2. **Create and activate a virtual environment (recommended):**
-
    ```bash
    python -m venv venv
    # On Windows:
    venv\Scripts\activate
-   # On macOS and Linux:
+   # On macOS/Linux:
    source venv/bin/activate
    ```
 
 3. **Install dependencies:**
-   Ensure you have FastAPI and Uvicorn installed. If you have a `requirements.txt` file, run `pip install -r requirements.txt`. Otherwise, install the packages directly:
    ```bash
-   pip install fastapi "uvicorn[standard]"
+   pip install fastapi "uvicorn[standard]" pytest httpx email-validator
    ```
 
-## Starting the FastAPI Server
-
-To start the FastAPI server, use `uvicorn` to run the main application file (`app/main.py`):
+## Running the API
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-- The server will be accessible at: `http://127.0.0.1:8000`
-- You can access the interactive API documentation (Swagger UI) at: `http://127.0.0.1:8000/docs`
-- The `--reload` flag is used for local development to automatically restart the server when code changes are detected.
+- API base URL: `http://127.0.0.1:8000`
+- Interactive docs (Swagger UI): `http://127.0.0.1:8000/docs`
+- The `--reload` flag auto-restarts the server on code changes.
 
-## Running Tests
+## Running the Tests
 
-1. **Install pytest** (if not already installed):
+```bash
+pytest tests/ -v
+```
 
-   ```bash
-   pip install pytest httpx
-   ```
+Run all tests from the project root directory. To run a specific file:
 
-2. **Run all tests:**
-
-   ```bash
-   pytest test/
-   ```
-
-3. **Run a specific test file:**
-
-   ```bash
-   pytest test/test_users.py
-   pytest test/test_courses.py
-   pytest test/test_enrollments.py
-   ```
-
-4. **Run with verbose output:**
-   ```bash
-   pytest test/ -v
-   ```
+```bash
+pytest tests/test_users.py -v
+pytest tests/test_courses.py -v
+pytest tests/test_enrollments.py -v
+```

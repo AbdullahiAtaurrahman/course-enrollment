@@ -1,5 +1,5 @@
-from schemas.course import CourseCreate, Course, CourseUpdate
-from core.db import courses
+from app.schemas.course import CourseCreate, Course, CourseUpdate
+from app.core.db import courses
 from fastapi import HTTPException, status
 
 class CourseService:
