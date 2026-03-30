@@ -1,49 +1,42 @@
-# Course Enrollment System
+# course_enrollment_p
+An aid designed to keep track of students who enroll in certain courses
 
-A RESTful API built with FastAPI that manages a course enrollment system with role-based interactions. The system uses in-memory data storage and has robust pydantic validation.
+## Features
+- **User Management**: Create and view users. Supports two roles: `student` and `admin`. Includes validation for names and emails.
+- **Course Management**: Admins can manage courses (Create, Update, Delete) with validation strictly on non-empty titles and unique course codes. Any user can view courses.
+- **Enrollment Management**: Students can freely enroll and deregister themselves from courses. Admins can view all enrollments or enforce deregistration.
 
-## Entities
-- User (id, name, email, role: student or admin)
-- Course (id, title, code)
-- Enrollment (id, user_id, course_id)
+## Installation and Setup
 
-## Prerequisites
-- Python 3.8+
-- `fastapi`
-- `uvicorn`
-- `pytest`
-- `httpx` (for testing)
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd course_enrollment_p
+   ```
 
-## Setup and Install
-```bash
-# Navigate to project director
-cd course_enrollment_project
+2. **Create and activate a virtual environment (recommended):**
+   ```bash
+   python -m venv venv
+   # On Windows:
+   venv\Scripts\activate
+   # On macOS and Linux:
+   source venv/bin/activate
+   ```
 
-# Create virtual environment (optional but recommended)
-python -m venv venv
-# Activate virtual environment
-# On Windows: venv\Scripts\activate
-# On Unix: source venv/bin/activate
+3. **Install dependencies:**
+   Ensure you have FastAPI and Uvicorn installed. If you have a `requirements.txt` file, run `pip install -r requirements.txt`. Otherwise, install the packages directly:
+   ```bash
+   pip install fastapi "uvicorn[standard]"
+   ```
 
-# Install requirements
-pip install fastapi uvicorn pydantic pytest httpx
-```
+## Starting the FastAPI Server
 
-## How to Run the API
-Run the following command to start the Uvicorn server:
+To start the FastAPI server, use `uvicorn` to run the main application file (`app/main.py`):
+
 ```bash
 uvicorn app.main:app --reload
 ```
-The interactive API docs will be available at: http://127.0.0.1:8000/docs
 
-### Note on Authentication
-Authentication is simulated for the purpose of demonstrating role-based access. 
-Provide roles (`student` or `admin`) via the `x-user-role` HTTP header when calling protected endpoints.
-Provide the user ID (`x-user-id`) via headers when deregistering yourself from a course to prove ownership.
-
-## How to run the tests
-Tests are written with `pytest` and use standard `httpx` testing clients. 
-Ensure you are in the `course_enrollment_project` root directory:
-```bash
-pytest tests/ -v
-```
+- The server will be accessible at: `http://127.0.0.1:8000`
+- You can access the interactive API documentation (Swagger UI) at: `http://127.0.0.1:8000/docs`
+- The `--reload` flag is used for local development to automatically restart the server when code changes are detected.

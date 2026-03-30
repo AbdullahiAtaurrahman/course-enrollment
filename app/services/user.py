@@ -1,20 +1,27 @@
-from typing import List, Optional
-from fastapi import HTTPException
-from app.schemas.user import UserCreate, User
-from app.core.db import users_db
+import re
+from fastapi import HTTPException, status
+from core.db import users
+from schemas.user import UserCreate, UserBase, User
 
 class UserService:
     @staticmethod
-    def create_user(user_in: UserCreate) -> User:
-        user_id = len(users_db) + 1
-        new_user = User(id=user_id, **user_in.model_dump())
-        users_db[user_id] = new_user
-        return new_user
+    def create_user(user_in: UserCreate):
+        if not user_in.name.strip():
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="name must not be empty")
+        
+        user_id = len(users) + 1
+        user = User(
+            id=str(user_id),
+            **user_in.model_dump()
+        )
+        users[user_id] = user
+        return user
 
     @staticmethod
-    def list_users() -> List[User]:
-        return list(users_db.values())
-
+    def get_users() -> list:
+        return list(users.values())
+    
     @staticmethod
-    def get_user(user_id: int) -> Optional[User]:
-        return users_db.get(user_id)
+    def get_user(id: int):
+        user = users.get(id)
+        return user

@@ -1,52 +1,48 @@
-from typing import List, Optional
 from fastapi import HTTPException, status
-from app.schemas.enrollment import EnrollmentCreate, Enrollment
-from app.core.db import enrollments_db, users_db, courses_db
+from core.db import users, courses, enrollments
+from schemas.enrollment import Enrollment
 
 class EnrollmentService:
     @staticmethod
-    def enroll_student(enrollment_in: EnrollmentCreate) -> Enrollment:
-        user = users_db.get(enrollment_in.user_id)
-        if not user:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-        if user.role != "student":
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only students can enroll in courses")
-            
-        course = courses_db.get(enrollment_in.course_id)
-        if not course:
+    def enroll_student(user_id: int, course_id: int):
+        if user_id not in users:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Student not found")
+        if course_id not in courses:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")
-            
-        # Check if already enrolled
-        for enrollment in enrollments_db.values():
-            if enrollment.user_id == enrollment_in.user_id and enrollment.course_id == enrollment_in.course_id:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Student already enrolled in this course")
-                
-        enroll_id = len(enrollments_db) + 1
-        new_enrollment = Enrollment(id=enroll_id, **enrollment_in.model_dump())
-        enrollments_db[enroll_id] = new_enrollment
-        return new_enrollment
-
+        
+        enrollment_id = f"{user_id}_{course_id}"
+        if enrollment_id in enrollments:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Student already enrolled in this course")
+        
+        enrollment = Enrollment(
+            id=enrollment_id,
+            user_id=user_id,
+            course_id=course_id
+        )
+        enrollments[enrollment_id] = enrollment
+        return enrollment
+        
     @staticmethod
-    def deregister_student(enrollment_id: int, requesting_user_id: int, force: bool = False) -> None:
-        enrollment = enrollments_db.get(enrollment_id)
-        if not enrollment:
+    def deregister_student(user_id: int, course_id: int):
+        enrollment_id = f"{user_id}_{course_id}"
+        if enrollment_id not in enrollments:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Enrollment not found")
-            
-        if not force:
-            # Check ownership
-            if enrollment.user_id != requesting_user_id:
-                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to deregister this enrollment")
-                
-        del enrollments_db[enrollment_id]
+        
+        del enrollments[enrollment_id]
+        return {"message": "Successfully deregistered from the course"}
 
     @staticmethod
-    def get_student_enrollments(user_id: int) -> List[Enrollment]:
-        return [e for e in enrollments_db.values() if e.user_id == user_id]
+    def get_student_enrollments(user_id: int):
+        return [e for e in enrollments.values() if e.user_id == user_id]
 
     @staticmethod
-    def get_all_enrollments() -> List[Enrollment]:
-        return list(enrollments_db.values())
+    def get_course_enrollments(course_id: int):
+        return [e for e in enrollments.values() if e.course_id == course_id]
 
     @staticmethod
-    def get_course_enrollments(course_id: int) -> List[Enrollment]:
-        return [e for e in enrollments_db.values() if e.course_id == course_id]
+    def get_all_enrollments():
+        return list(enrollments.values())
+
+    @staticmethod
+    def force_deregister(user_id: int, course_id: int):
+        return EnrollmentService.deregister_student(user_id, course_id)

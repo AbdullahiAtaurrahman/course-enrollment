@@ -7,5 +7,5 @@ class EnrollmentBase(BaseModel):
 class EnrollmentCreate(EnrollmentBase):
     pass
 
-class Enrollment(EnrollmentBase):
-    id: int
+class Enrollment(EnrollmentCreate):
+    id: str

@@ -1,19 +1,17 @@
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel
+from enum import Enum
+
+class UserRole(str, Enum):
+     ADMIN = 'admin'
+     STUDENT = 'student'
 
 class UserBase(BaseModel):
-    name: str = Field(..., min_length=1)
-    email: EmailStr
-    role: str
-    
-    @field_validator('role')
-    @classmethod
-    def role_must_be_valid(cls, v: str) -> str:
-        if v not in ['student', 'admin']:
-            raise ValueError('role must be either student or admin')
-        return v
+    email: str
+    name: str
+    role: UserRole
 
 class UserCreate(UserBase):
     pass
 
-class User(UserBase):
-    id: int
+class User(UserCreate):
+     id: str

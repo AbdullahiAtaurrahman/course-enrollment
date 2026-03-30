@@ -1,11 +1,16 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from typing import Optional
 
 class CourseBase(BaseModel):
-    title: str = Field(..., min_length=1)
-    code: str = Field(..., min_length=1)
+    title: str
+    code: str
 
 class CourseCreate(CourseBase):
     pass
 
 class Course(CourseBase):
     id: int
+
+class CourseUpdate(BaseModel):
+    title: Optional[str] = None
+    code: Optional[str] = None
